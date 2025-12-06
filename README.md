@@ -17,10 +17,10 @@ chmod +x ttywatch.sh
 
 ## Basic run
 ```bash
-./stopwatch.sh
+./ttywatch.sh
 ```
 
 ## Run with a goal
 ```bash
-./stopwatch.sh -g "Deploy to Production"
+./ttywatch.sh -g "Deploy to Production"
 ```
