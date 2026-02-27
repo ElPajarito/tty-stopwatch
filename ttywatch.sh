@@ -8,6 +8,10 @@
 
 set -u
 
+# --- Environment Setup ---
+# Dynamically find the directory where this script lives
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
+
 # --- Visual Configuration ---
 BOLD=$(tput bold)
 RESET=$(tput sgr0)
@@ -63,7 +67,8 @@ format_time() {
 }
 
 play_random_sound() {
-    local sounds_dir="sounds"
+    # Force absolute path resolution based on script location
+    local sounds_dir="${SCRIPT_DIR}/sounds"
     ALARM_PID="" # Reset PID
     
     # Check if directory exists
@@ -87,15 +92,9 @@ play_random_sound() {
                 ffplay -nodisp -autoexit "$target_file" &> /dev/null & ALARM_PID=$!
             elif command -v play &> /dev/null; then
                 play -q "$target_file" &> /dev/null & ALARM_PID=$!
-            else
-                printf "\a" # Fallback if no player installed
             fi
-            return
         fi
     fi
-    
-    # Fallback to standard bell if folder is missing or empty
-    printf "\a"
 }
 
 get_dog_line() {
@@ -198,7 +197,7 @@ while true; do
                 ALARM_RINGING=false 
             fi
         else
-            # If no PID was captured (fallback bell), auto-dismiss immediately
+            # If no PID was captured (e.g. no MP3s found), auto-dismiss immediately
             ALARM_RINGING=false
         fi
     fi
